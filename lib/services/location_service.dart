@@ -1,6 +1,5 @@
 // import 'package:blabla/data/dummy_data.dart';
-import 'package:w3/data/dummy_data.dart';
-
+import 'package:week_3_blabla_project/data/dummy_data.dart';
 import '../model/ride/locations.dart';
 
 ////

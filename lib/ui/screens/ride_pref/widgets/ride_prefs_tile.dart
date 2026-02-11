@@ -1,7 +1,7 @@
 // import 'package:blabla/ui/theme/theme.dart';
 // import 'package:blabla/utils/date_time_utils.dart';
-import 'package:w3/ui/theme/theme.dart';
-import 'package:w3/utils/date_time_utils.dart';
+import 'package:week_3_blabla_project/ui/theme/theme.dart';
+import 'package:week_3_blabla_project/utils/date_time_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../model/ride_pref/ride_pref.dart';
