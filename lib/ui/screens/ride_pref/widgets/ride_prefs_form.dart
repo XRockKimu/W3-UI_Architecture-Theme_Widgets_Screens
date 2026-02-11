@@ -1,3 +1,4 @@
+import 'package:blabla/ui/widgets/bla_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../model/ride/locations.dart';
@@ -15,8 +16,8 @@ import '../../../../model/ride_pref/ride_pref.dart';
 class RidePrefForm extends StatefulWidget {
   // The form can be created with an optional initial RidePref.
   final RidePref? initRidePref;
-
-  const RidePrefForm({super.key, this.initRidePref});
+  final void Function(RidePref)? onSubmit;
+  const RidePrefForm({super.key, this.initRidePref, this.onSubmit});
 
   @override
   State<RidePrefForm> createState() => _RidePrefFormState();
@@ -36,12 +37,25 @@ class _RidePrefFormState extends State<RidePrefForm> {
   void initState() {
     super.initState();
     // TODO
+    if (widget.initRidePref != null) {
+      departure = widget.initRidePref!.departure;
+      arrival = widget.initRidePref!.arrival;
+      departureDate = widget.initRidePref!.departureDate;
+      requestedSeats = widget.initRidePref!.requestedSeats;
+    } else {
+      departure = null;
+      arrival = null;
+      departureDate = DateTime.now();
+      requestedSeats = 1;
+    }
   }
 
   // ----------------------------------
   // Handle events
   // ----------------------------------
-
+  bool get isValid {
+    return departure != null && arrival != null && requestedSeats > 0;
+  }
   // ----------------------------------
   // Compute the widgets rendering
   // ----------------------------------
@@ -54,8 +68,39 @@ class _RidePrefFormState extends State<RidePrefForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [ 
-        
-        ]);
+      children: [
+        ListTile(
+          title: Text(departure?.name ?? "Select departure"),
+          onTap: () {},
+        ),
+
+        ListTile(title: Text(arrival?.name ?? "Select arrival"), onTap: () {}),
+
+        ListTile(
+          title: Text("Seats: $requestedSeats"),
+          onTap: () {
+            setState(() {
+              requestedSeats++;
+            });
+          },
+        ),
+
+        BlaButton(
+          label: "Search",
+          onPressed: isValid
+              ? () {
+                  final pref = RidePref(
+                    departure: departure!,
+                    arrival: arrival!,
+                    departureDate: departureDate,
+                    requestedSeats: requestedSeats,
+                  );
+
+                  widget.onSubmit?.call(pref);
+                }
+              : null,
+        ),
+      ],
+    );
   }
 }
