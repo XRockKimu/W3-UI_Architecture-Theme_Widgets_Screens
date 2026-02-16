@@ -1,9 +1,9 @@
 import 'package:blabla/model/ride_pref/ride_pref.dart';
 import 'package:blabla/services/ride_prefs_service.dart';
 import 'package:flutter/material.dart';
-import '../../theme/theme.dart';
-import 'widgets/ride_prefs_form.dart';
-import 'widgets/ride_prefs_tile.dart';
+import '../../../theme/theme.dart';
+import 'ride_prefs_form.dart';
+import 'ride_prefs_tile.dart';
 
 const String blablaHomeImagePath = 'assets/images/blabla_home.png';
 
