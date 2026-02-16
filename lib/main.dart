@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'ui/screens/ride_pref/widgets/ride_prefs_screen.dart';
+import 'ui/screens/ride_pref/ride_prefs_screen.dart';
 import 'ui/theme/theme.dart';
 
 void main() {

@@ -1,8 +1,12 @@
-import 'package:blabla/ui/widgets/actions/bla_button.dart';
 import 'package:flutter/material.dart';
+import 'package:blabla/ui/widgets/actions/bla_button.dart';
+import 'package:blabla/ui/widgets/display/bla_divider.dart';
 
 import '../../../../model/ride/locations.dart';
 import '../../../../model/ride_pref/ride_pref.dart';
+import '../../../../utils/date_time_utils.dart';
+import '../../../theme/theme.dart';
+import 'ride_prefs_input.dart';
 
 ///
 /// A Ride Preference From is a view to select:
@@ -53,49 +57,90 @@ class _RidePrefFormState extends State<RidePrefForm> {
   // ----------------------------------
   // Handle events
   // ----------------------------------
-  bool get isValid {
-    return departure != null && arrival != null && requestedSeats > 0;
+  void onDeparturePressed() {}
+
+  void onArrivalPressed() {}
+
+  void onSubmit() {
+    if (!isValid) return;
+
+    final pref = RidePref(
+      departure: departure!,
+      arrival: arrival!,
+      departureDate: departureDate,
+      requestedSeats: requestedSeats,
+    );
+
+    widget.onSubmit?.call(pref);
   }
+
   // ----------------------------------
   // Compute the widgets rendering
   // ----------------------------------
+  bool get isValid =>
+      departure != null && arrival != null && requestedSeats > 0;
 
+  String get departureLabel =>
+      departure != null ? departure!.name : "Leaving from";
+
+  String get arrivalLabel => arrival != null ? arrival!.name : "Going to";
+
+  bool get showDeparturePlaceholder => departure == null;
+
+  bool get showArrivalPlaceholder => arrival == null;
+
+  String get dateLabel => DateTimeUtils.formatDateTime(departureDate);
+
+  String get seatLabel => requestedSeats.toString();
   // ----------------------------------
   // Build the widgets
   // ----------------------------------
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ListTile(
-          title: Text(departure?.name ?? "Select departure"),
-          onTap: () {},
-        ),
-        ListTile(title: Text(arrival?.name ?? "Select arrival"), onTap: () {}),
-        ListTile(
-          title: Text("Seats: $requestedSeats"),
-          onTap: () {
-            setState(() {
-              requestedSeats++;
-            });
-          },
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: BlaSpacings.m,
+          ),
+          child: Column(
+            children: [
+              RidePrefInput(
+                title: departureLabel,
+                leftIcon: Icons.location_on,
+                isPlaceHolder: showDeparturePlaceholder,
+                onPressed: onDeparturePressed,
+              ),
+              const BlaDivider(),
+              RidePrefInput(
+                title: arrivalLabel,
+                leftIcon: Icons.location_on,
+                isPlaceHolder: showArrivalPlaceholder,
+                onPressed: onArrivalPressed,
+              ),
+              const BlaDivider(),
+              RidePrefInput(
+                title: dateLabel,
+                leftIcon: Icons.calendar_month,
+                onPressed: () {},
+              ),
+              const BlaDivider(),
+              RidePrefInput(
+                title: seatLabel,
+                leftIcon: Icons.person_2_outlined,
+                onPressed: () {
+                  setState(() {
+                    requestedSeats++;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
         BlaButton(
-          label: "Search",
-          onPressed: isValid
-              ? () {
-                  final pref = RidePref(
-                    departure: departure!,
-                    arrival: arrival!,
-                    departureDate: departureDate,
-                    requestedSeats: requestedSeats,
-                  );
-
-                  widget.onSubmit?.call(pref);
-                }
-              : null,
+          text: "Search",
+          onPressed: isValid ? onSubmit : null,
         ),
       ],
     );

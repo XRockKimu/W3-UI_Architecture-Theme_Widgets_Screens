@@ -1,58 +1,78 @@
 import 'package:flutter/material.dart';
+import '../../theme/theme.dart';
+
+enum ButtonType { primary, secondary }
 
 class BlaButton extends StatelessWidget {
-  final String label;
+  final String text;
   final VoidCallback? onPressed;
-  final bool isPrimary;
+  final ButtonType type;
   final IconData? icon;
-  final bool isFullWidth;
 
   const BlaButton({
     super.key,
-    required this.label,
+    required this.text,
     required this.onPressed,
-    this.isPrimary = true,
+    this.type = ButtonType.primary,
     this.icon,
-    this.isFullWidth = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Widget child = icon != null
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon),
-              const SizedBox(width: 8),
-              Text(label),
-            ],
-          )
-        : Text(label);
+    final bool isPrimary = type == ButtonType.primary;
 
-    final ButtonStyle style = isPrimary
-        ? ElevatedButton.styleFrom()
-        : OutlinedButton.styleFrom();
+    final Color backgroundColor =
+        isPrimary ? BlaColors.primary : BlaColors.white;
 
-    final Widget button = isPrimary
-        ? ElevatedButton(
-            onPressed: onPressed,
-            style: style,
-            child: child,
-          )
-        : OutlinedButton(
-            onPressed: onPressed,
-            style: style,
-            child: child,
-          );
+    final BorderSide border = isPrimary
+        ? BorderSide.none
+        : BorderSide(color: BlaColors.greyLight, width: 2);
 
-    if (isFullWidth) {
-      return SizedBox(
-        width: double.infinity,
-        child: button,
+    final Color contentColor =
+        isPrimary ? BlaColors.white : BlaColors.primary;
+
+    List<Widget> children = [];
+
+    if (icon != null) {
+      children.add(
+        Icon(
+          icon,
+          size: 20,
+          color: contentColor,
+        ),
+      );
+      children.add(
+        SizedBox(width: BlaSpacings.s),
       );
     }
 
-    return button;
+    children.add(
+      Text(
+        text,
+        style: BlaTextStyles.button.copyWith(color: contentColor),
+      ),
+    );
+
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          padding: EdgeInsets.symmetric(
+            vertical: BlaSpacings.m,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(BlaSpacings.radius),
+          ),
+          side: border,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: children,
+        ),
+      ),
+    );
   }
 }
