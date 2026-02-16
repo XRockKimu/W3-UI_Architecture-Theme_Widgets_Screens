@@ -57,9 +57,9 @@ class _RidePrefFormState extends State<RidePrefForm> {
   // ----------------------------------
   // Handle events
   // ----------------------------------
-  void onDeparturePressed() {}
+  void onDeparturePressed() async {}
 
-  void onArrivalPressed() {}
+  void onArrivalPressed() async {}
 
   void onSubmit() {
     if (!isValid) return;
@@ -74,24 +74,33 @@ class _RidePrefFormState extends State<RidePrefForm> {
     widget.onSubmit?.call(pref);
   }
 
+  void onSwappingLocationPressed() {
+    setState(() {
+      if (departure != null && arrival != null) {
+        Location temp = departure!;
+        departure = Location.copy(arrival!);
+        arrival = Location.copy(temp);
+      }
+    });
+  }
+
   // ----------------------------------
   // Compute the widgets rendering
   // ----------------------------------
   bool get isValid =>
       departure != null && arrival != null && requestedSeats > 0;
-
   String get departureLabel =>
       departure != null ? departure!.name : "Leaving from";
 
   String get arrivalLabel => arrival != null ? arrival!.name : "Going to";
 
   bool get showDeparturePlaceholder => departure == null;
-
   bool get showArrivalPlaceholder => arrival == null;
 
   String get dateLabel => DateTimeUtils.formatDateTime(departureDate);
-
   String get seatLabel => requestedSeats.toString();
+
+  bool get switchVisible => arrival != null && departure != null;
   // ----------------------------------
   // Build the widgets
   // ----------------------------------
@@ -110,9 +119,14 @@ class _RidePrefFormState extends State<RidePrefForm> {
                 title: departureLabel,
                 leftIcon: Icons.location_on,
                 isPlaceHolder: showDeparturePlaceholder,
+                rightIcon: switchVisible ? Icons.swap_vert : null,
                 onPressed: onDeparturePressed,
+                onRightIconPressed: switchVisible
+                    ? onSwappingLocationPressed
+                    : null,
               ),
               const BlaDivider(),
+
               RidePrefInput(
                 title: arrivalLabel,
                 leftIcon: Icons.location_on,
@@ -120,12 +134,14 @@ class _RidePrefFormState extends State<RidePrefForm> {
                 onPressed: onArrivalPressed,
               ),
               const BlaDivider(),
+
               RidePrefInput(
                 title: dateLabel,
                 leftIcon: Icons.calendar_month,
                 onPressed: () {},
               ),
               const BlaDivider(),
+              
               RidePrefInput(
                 title: seatLabel,
                 leftIcon: Icons.person_2_outlined,

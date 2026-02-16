@@ -50,7 +50,10 @@ class RidePrefsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 2 - THE FORM
-              RidePrefForm(initRidePref: RidePrefsService.selectedRidePref),
+              RidePrefForm(
+                initRidePref: RidePrefsService.selectedRidePref,
+                onSubmit: onRidePrefSelected,
+              ),
               SizedBox(height: BlaSpacings.m),
 
               // 3 - THE HISTORY
