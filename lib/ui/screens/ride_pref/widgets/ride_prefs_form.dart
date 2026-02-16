@@ -1,4 +1,4 @@
-import 'package:blabla/ui/widgets/bla_button.dart';
+import 'package:blabla/ui/widgets/actions/bla_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../model/ride/locations.dart';
@@ -73,9 +73,7 @@ class _RidePrefFormState extends State<RidePrefForm> {
           title: Text(departure?.name ?? "Select departure"),
           onTap: () {},
         ),
-
         ListTile(title: Text(arrival?.name ?? "Select arrival"), onTap: () {}),
-
         ListTile(
           title: Text("Seats: $requestedSeats"),
           onTap: () {
@@ -84,7 +82,6 @@ class _RidePrefFormState extends State<RidePrefForm> {
             });
           },
         ),
-
         BlaButton(
           label: "Search",
           onPressed: isValid
